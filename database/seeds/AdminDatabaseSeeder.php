@@ -23,6 +23,5 @@ class AdminDatabaseSeeder extends Seeder
         $this->seed('RolesTableSeeder');
         $this->seed('PermissionsTableSeeder');
         $this->seed('PermissionRoleTableSeeder');
-        $this->seed('FormDesignerTableSeeder');
     }
 }

@@ -170,7 +170,7 @@ class MenuItemsTableSeeder extends Seeder
             if (!$menuItem->exists) {
                 $menuItem->fill([
                     'target'     => '_self',
-                    'icon_class' => 'admin-list',
+                    'icon_class' => 'admin-wand',
                     'color'      => null,
                     'parent_id'  => $toolsMenuItem->id,
                     'order'      => 11,
