@@ -42,8 +42,8 @@ class DataRowsTableSeeder extends Seeder
                 'display_name' => 'Author',
                 'required'     => 1,
                 'browse'       => 0,
-                'read'         => 1,
-                'edit'         => 1,
+                'read'         => 0,
+                'edit'         => 0,
                 'add'          => 0,
                 'delete'       => 1,
                 'details'      => '',
@@ -51,10 +51,54 @@ class DataRowsTableSeeder extends Seeder
             ])->save();
         }
 
-        $dataRow = $this->dataRow($postDataType, 'category_id');
+        $dataRow = $this->dataRow($postDataType, 'slug');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
+                'display_name' => 'Slug',
+                'required'     => 1,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => json_encode([
+                    'slugify' => [
+                        'origin'      => 'title',
+                        'forceUpdate' => true,
+                    ],
+                ]),
+                'order' => 3,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($postDataType, 'status');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'select_dropdown',
+                'display_name' => 'Status',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => json_encode([
+                    'default' => 'DRAFT',
+                    'options' => [
+                        'PUBLISHED' => 'published',
+                        'DRAFT'     => 'draft',
+                        'PENDING'   => 'pending',
+                    ],
+                ]),
+                'order' => 4,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($postDataType, 'category_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'select_dropdown',
                 'display_name' => 'Category',
                 'required'     => 1,
                 'browse'       => 0,
@@ -62,8 +106,13 @@ class DataRowsTableSeeder extends Seeder
                 'edit'         => 1,
                 'add'          => 1,
                 'delete'       => 0,
-                'details'      => '',
-                'order'        => 3,
+                'details'      => json_encode([
+                    'relationship' => [
+                        'key'   => 'id',
+                        'label' => 'name',
+                    ]
+                ]),
+                'order'        => 5,
             ])->save();
         }
 
@@ -71,7 +120,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => 'Title',
+                'display_name' => '',
                 'required'     => 1,
                 'browse'       => 1,
                 'read'         => 1,
@@ -79,7 +128,7 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 1,
                 'delete'       => 1,
                 'details'      => '',
-                'order'        => 4,
+                'order'        => 6,
             ])->save();
         }
 
@@ -87,7 +136,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text_area',
-                'display_name' => 'excerpt',
+                'display_name' => '',
                 'required'     => 1,
                 'browse'       => 0,
                 'read'         => 1,
@@ -95,7 +144,7 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 1,
                 'delete'       => 1,
                 'details'      => '',
-                'order'        => 5,
+                'order'        => 7,
             ])->save();
         }
 
@@ -103,15 +152,19 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'rich_text_box',
-                'display_name' => 'Body',
+                'display_name' => '',
                 'required'     => 1,
                 'browse'       => 0,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
                 'delete'       => 1,
-                'details'      => '',
-                'order'        => 6,
+                'details'      => json_encode([
+                    'validation' => [
+                        'rule'   => 'required',
+                    ]
+                ]),
+                'order'        => 8,
             ])->save();
         }
 
@@ -127,52 +180,30 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 1,
                 'delete'       => 1,
                 'details'      => json_encode([
-                    'resize' => [
-                        'width'  => '1000',
-                        'height' => 'null',
-                    ],
-                    'quality'    => '70%',
-                    'upsize'     => true,
-                    'thumbnails' => [
+                    'cropper' => [
                         [
-                            'name'  => 'medium',
-                            'scale' => '50%',
-                        ],
-                        [
-                            'name'  => 'small',
-                            'scale' => '25%',
-                        ],
-                        [
-                            'name' => 'cropped',
-                            'crop' => [
-                                'width'  => '300',
-                                'height' => '250',
+                            'name'  => 'avatar',
+                            'size' => [
+                                'name' => 'max',
+                                'width' => '300',
+                                'height' => '200',
+                            ],
+                            'resize' => [
+                                [
+                                    'name' => 'norm',
+                                    'width' => '200',
+                                    'height' => 'null',
+                                ],
+                                [
+                                    'name' => 'min',
+                                    'width' => '100',
+                                    'height' => 'null',
+                                ],
                             ],
                         ],
                     ],
                 ]),
-                'order' => 7,
-            ])->save();
-        }
-
-        $dataRow = $this->dataRow($postDataType, 'slug');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type'         => 'text',
-                'display_name' => 'slug',
-                'required'     => 1,
-                'browse'       => 0,
-                'read'         => 1,
-                'edit'         => 1,
-                'add'          => 1,
-                'delete'       => 1,
-                'details'      => json_encode([
-                    'slugify' => [
-                        'origin'      => 'title',
-                        'forceUpdate' => true,
-                    ],
-                ]),
-                'order' => 8,
+                'order' => 9,
             ])->save();
         }
 
@@ -180,23 +211,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text_area',
-                'display_name' => 'meta_description',
-                'required'     => 1,
-                'browse'       => 0,
-                'read'         => 1,
-                'edit'         => 1,
-                'add'          => 1,
-                'delete'       => 1,
-                'details'      => '',
-                'order'        => 9,
-            ])->save();
-        }
-
-        $dataRow = $this->dataRow($postDataType, 'meta_keywords');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type'         => 'text_area',
-                'display_name' => 'meta_keywords',
+                'display_name' => 'Meta Description',
                 'required'     => 1,
                 'browse'       => 0,
                 'read'         => 1,
@@ -208,26 +223,19 @@ class DataRowsTableSeeder extends Seeder
             ])->save();
         }
 
-        $dataRow = $this->dataRow($postDataType, 'status');
+        $dataRow = $this->dataRow($postDataType, 'meta_keywords');
         if (!$dataRow->exists) {
             $dataRow->fill([
-                'type'         => 'select_dropdown',
-                'display_name' => 'status',
+                'type'         => 'text_area',
+                'display_name' => 'Meta Keywords',
                 'required'     => 1,
-                'browse'       => 1,
+                'browse'       => 0,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
                 'delete'       => 1,
-                'details'      => json_encode([
-                    'default' => 'DRAFT',
-                    'options' => [
-                        'PUBLISHED' => 'published',
-                        'DRAFT'     => 'draft',
-                        'PENDING'   => 'pending',
-                    ],
-                ]),
-                'order' => 11,
+                'details'      => '',
+                'order'        => 11,
             ])->save();
         }
 
@@ -235,7 +243,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'timestamp',
-                'display_name' => 'created_at',
+                'display_name' => 'Created at',
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -282,7 +290,7 @@ class DataRowsTableSeeder extends Seeder
         $dataRow = $this->dataRow($pageDataType, 'author_id');
         if (!$dataRow->exists) {
             $dataRow->fill([
-                'type'         => 'text',
+                'type'         => 'select_dropdown',
                 'display_name' => 'author_id',
                 'required'     => 1,
                 'browse'       => 0,
@@ -290,7 +298,12 @@ class DataRowsTableSeeder extends Seeder
                 'edit'         => 0,
                 'add'          => 0,
                 'delete'       => 0,
-                'details'      => '',
+                'details'      => json_encode([
+                    'relationship' => [
+                        'key'   => 'id',
+                        'label' => 'name',
+                    ]
+                ]),
                 'order'        => 2,
             ])->save();
         }
